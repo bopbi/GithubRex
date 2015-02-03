@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -85,7 +86,6 @@ public class MainActivity extends ActionBarActivity {
 
         Observable<List<Contributor>> obserVableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
         obserVableContributorList
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .lift(new Observable.Operator<Contributor, List<Contributor>>() {
                     @Override
                     public Subscriber<? super List<Contributor>> call(final Subscriber<? super Contributor> subscriber) {
@@ -110,14 +110,20 @@ public class MainActivity extends ActionBarActivity {
                         };
                     }
                 })
+                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                 .forEach(new Action1<Contributor>() {
                     @Override
                     public void call(Contributor contributor) {
                         contributionTextView.append(contributor.contributions + "\t" + contributor.login);
                         contributionTextView.append("\n");
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        contributionTextView.setText(throwable.getMessage());
+                    }
                 });
-         
+
 
         /*
         more advanced but sometimes is forbidden by the gitHub API
