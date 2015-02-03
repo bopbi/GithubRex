@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
                 });
          */
 
-        /*
+
 
         Observable<List<Contributor>> obserVableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
         obserVableContributorList
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
                         contributionTextView.append("\n");
                     }
                 });
-         */
+         
 
         /*
         more advanced but sometimes is forbidden by the gitHub API
