@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
          */
 
 
-
+/*
         Observable<List<Contributor>> observableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
         observableContributorList
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -124,11 +124,9 @@ public class MainActivity extends ActionBarActivity {
                         contributionTextView.setText(throwable.getMessage());
                     }
                 });
+*/
 
-
-        /*
-        more advanced but sometimes is forbidden by the gitHub API
-        403
+        //more advanced but sometimes is forbidden by the gitHub API 403
 
         Observable<List<Contributor>> observableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
         observableContributorList
@@ -161,10 +159,9 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public Observable<User> call(Contributor contributor) {
                         Log.i("contributor", contributor.login);
-                        return gitHubApi.user(contributor.login);
+                        return gitHubApi.user(contributor.login).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
                     }
                 })
-
                 .subscribe(new Observer<User>() {
                     @Override
                     public void onCompleted() {
@@ -173,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("error", e.toString());
+                        Log.e("error", e.getMessage());
                         contributionTextView.append(e.toString());
                         onCompleted();
                     }
@@ -185,7 +182,7 @@ public class MainActivity extends ActionBarActivity {
                         contributionTextView.append("\n");
                     }
                 });
-                */
+
     }
 
     @Override
