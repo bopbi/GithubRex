@@ -84,8 +84,9 @@ public class MainActivity extends ActionBarActivity {
 
 
 
-        Observable<List<Contributor>> obserVableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
-        obserVableContributorList
+        Observable<List<Contributor>> observableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
+        observableContributorList
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .lift(new Observable.Operator<Contributor, List<Contributor>>() {
                     @Override
                     public Subscriber<? super List<Contributor>> call(final Subscriber<? super Contributor> subscriber) {
@@ -110,10 +111,10 @@ public class MainActivity extends ActionBarActivity {
                         };
                     }
                 })
-                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                 .forEach(new Action1<Contributor>() {
                     @Override
                     public void call(Contributor contributor) {
+                        Log.i("contributor", contributor.login);
                         contributionTextView.append(contributor.contributions + "\t" + contributor.login);
                         contributionTextView.append("\n");
                     }
@@ -129,9 +130,9 @@ public class MainActivity extends ActionBarActivity {
         more advanced but sometimes is forbidden by the gitHub API
         403
 
-        Observable<List<Contributor>> obserVableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
-        obserVableContributorList
-
+        Observable<List<Contributor>> observableContributorList = gitHubApi.observableContributors(REPO_USER, REPO_NAME);
+        observableContributorList
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .lift(new Observable.Operator<Contributor, List<Contributor>>() {
                     @Override
                     public Subscriber<? super List<Contributor>> call(final Subscriber<? super Contributor> subscriber) {
@@ -163,7 +164,7 @@ public class MainActivity extends ActionBarActivity {
                         return gitHubApi.user(contributor.login);
                     }
                 })
-                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+
                 .subscribe(new Observer<User>() {
                     @Override
                     public void onCompleted() {
